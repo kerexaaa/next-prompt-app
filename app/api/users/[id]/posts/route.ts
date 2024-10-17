@@ -18,6 +18,12 @@ export const GET = async (
       creator: params.id,
     }).populate("creator");
 
+    if (prompts.length === 0) {
+      return new Response(`Posts not found!`, {
+        status: 404,
+      });
+    }
+
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (error) {
     return new Response("Failed to fetch all posts", { status: 500 });

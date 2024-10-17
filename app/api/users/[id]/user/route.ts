@@ -10,7 +10,6 @@ export const GET = async (
   req: Request,
   { params }: { params: DynamicParams }
 ) => {
-  console.log("Parameters", params.id);
   try {
     await connectToDB();
 
@@ -19,7 +18,9 @@ export const GET = async (
     });
 
     if (!userExists) {
-      return new Response(JSON.stringify(`Profile not found!`), { status: 404 });
+      return new Response(`Profile not found!`, {
+        status: 404,
+      });
     }
 
     return new Response(JSON.stringify(userExists), { status: 200 });

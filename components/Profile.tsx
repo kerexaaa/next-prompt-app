@@ -25,7 +25,7 @@ const Profile = ({
         {!name ? (
           <Skeleton />
         ) : (
-          <span className="blue_gradient">{name} Profile</span>
+          <span className="blue_gradient">{name === 'User not found!' ? name : `${name} Profile`}</span>
         )}
       </h1>
       <p className="desc text-left">{name ? desc : <Skeleton />}</p>
@@ -39,7 +39,7 @@ const Profile = ({
               handleDelete={() => handleDelete && handleDelete(post)}
             ></PromptCard>
           ) : (
-            <div className="prompt_card">
+            <div className="prompt_card" key={index}>
               <Skeleton className="prompt_card" key={index} height={170} />
             </div>
           );

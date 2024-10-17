@@ -9,49 +9,71 @@ import { IUser } from "@models/user";
 const ProfilePage = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [user, setUser] = useState<IUser>();
 
   useEffect(() => {
     if (id) {
       setIsLoading(true);
-      fetchPosts();
       fetchProfile();
+      fetchPosts();
       setIsLoading(false);
     }
   }, [id]);
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [user, setUser] = useState<IUser>();
-
   const fetchPosts = async () => {
-    const response = await fetch(`/api/users/${id}/posts`);
-    const data: Post[] = await response.json();
+    try {
+      const response = await fetch(`/api/users/${id}/posts`);
 
-    setPosts(data);
+      if (!response.ok) {
+        if (response.status === 404) {
+          setPosts([]);
+        } else {
+          throw new Error(`Error fetching posts: ${response.status}`);
+        }
+        return;
+      }
+
+      const data: Post[] = await response.json();
+      setPosts(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch posts.");
+    }
   };
 
   const fetchProfile = async () => {
-    const response = await fetch(`/api/users/${id}/user`);
+    try {
+      const response = await fetch(`/api/users/${id}/user`);
 
-    if (response.status === 404) {
-      const userNotFound: IUser = {
-        email: "",
-        image: "",
-        username: "There is no user with this id.",
-      };
+      if (!response.ok) {
+        if (response.status === 404) {
+          setError("User not found");
+          setUser(undefined);
+        } else {
+          throw new Error(`Error fetching user: ${response.status}`);
+        }
+        return;
+      }
 
-      return (
-        <Profile
-          name={userNotFound.username}
-          desc={`Seems like he's gone`}
-          data={[]}
-        />
-      );
+      const data: IUser = await response.json();
+      setUser(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch user profile.");
     }
-
-    const data: IUser = await response.json();
-
-    setUser(data);
   };
+
+  if (error) {
+    return (
+      <Profile
+        data={posts}
+        desc={`There's no user with this id!`}
+        name="User not found!"
+      />
+    );
+  }
 
   return (
     <>
