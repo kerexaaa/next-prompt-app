@@ -60,7 +60,7 @@ const ProfilePage = () => {
       const data: IUser = await response.json();
       setUser(data);
     } catch (err) {
-      console.error(err);
+      console.error("An error occured", err);
       setError("Failed to fetch user profile.");
     }
   };
