@@ -26,11 +26,7 @@ const PromptCardList = ({
           ></PromptCard>
         ) : (
           <div className="prompt_card">
-            <Skeleton
-              className="prompt_card"
-              key={index}
-              height={120}
-            />
+            <Skeleton className="prompt_card" key={index} height={120} />
           </div>
         );
       })}
@@ -59,10 +55,11 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
-  console.log(posts);
-  console.log(originalPosts);
-
   const handleSearchInput = (value: string) => {
+    if (isLoading) {
+      return;
+    }
+
     if (value === "") {
       setPosts(originalPosts);
       return;
