@@ -31,6 +31,23 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     const response = await fetch(`/api/users/${id}/user`);
+
+    if (response.status === 404) {
+      const userNotFound: IUser = {
+        email: "",
+        image: "",
+        username: "There is no user with this id.",
+      };
+
+      return (
+        <Profile
+          name={userNotFound.username}
+          desc={`Seems like he's gone`}
+          data={[]}
+        />
+      );
+    }
+
     const data: IUser = await response.json();
 
     setUser(data);

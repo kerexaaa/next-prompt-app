@@ -18,6 +18,10 @@ export const GET = async (
       _id: params.id,
     });
 
+    if (!userExists) {
+      return new Response(JSON.stringify(`Profile not found!`), { status: 404 });
+    }
+
     return new Response(JSON.stringify(userExists), { status: 200 });
   } catch (error) {
     return new Response("Failed to fetch all posts", { status: 500 });
