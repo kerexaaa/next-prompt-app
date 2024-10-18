@@ -8,9 +8,7 @@ import { IUser } from "@models/user";
 import { useSession } from "next-auth/react";
 
 const ProfilePage = () => {
-  const { data: session } = useSession();
   const { id } = useParams();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -24,13 +22,6 @@ const ProfilePage = () => {
       setIsLoading(false);
     }
   }, [id]);
-
-  useEffect(() => {
-    if (posts[0].creator._id.toString() === session?.user.id) {
-      router.push("/profile");
-      return;
-    }
-  }, [posts]);
 
   const fetchPosts = async () => {
     try {
