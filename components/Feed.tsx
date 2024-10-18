@@ -25,7 +25,7 @@ const PromptCardList = ({
             handleTagClick={handleTagClick}
           ></PromptCard>
         ) : (
-          <div className="prompt_card">
+          <div className="prompt_card" key={index}>
             <Skeleton className="prompt_card" key={index} height={120} />
           </div>
         );
